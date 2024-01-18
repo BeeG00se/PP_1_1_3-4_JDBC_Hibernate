@@ -70,5 +70,5 @@ public class User {
         this.age = age;
     }
 
-
+    //todo: забыли переопределить equals/hashCode
 }

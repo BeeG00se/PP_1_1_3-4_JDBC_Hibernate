@@ -8,7 +8,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
-    UserDao userDaoJDBC = new UserDaoJDBCImpl();
+
+    UserDao userDaoJDBC = new UserDaoJDBCImpl();//todo: инициализируем через конструктор
 
     public void createUsersTable() throws SQLException {
         userDaoJDBC.createUsersTable();
@@ -20,7 +21,7 @@ public class UserServiceImpl implements UserService {
 
     public void saveUser(String name, String lastName, byte age) {
         userDaoJDBC.saveUser(name, lastName, age);
-        System.out.println("User с именем – " + name + " добавлен в базу данных");
+        System.out.println("User с именем – " + name + " добавлен в базу данных");//todo: и ток - во всех методах слоя (имитируем log-и)
     }
 
     public void removeUserById(long id) {

@@ -11,10 +11,11 @@ import java.util.List;
 import static java.sql.DriverManager.getConnection;
 
 public class UserDaoJDBCImpl implements UserDao {
-//    private static final  = Util.connection();
+//    private static final  = Util.connection();//todo: закомментированного кода не должно быть...
 
+    //todo: создаем переменную Connection connection, инициализируем ее через конструктор
 
-    public UserDaoJDBCImpl() {
+    public UserDaoJDBCImpl() {//todo: пустой зачем?
 
     }
 
@@ -29,7 +30,7 @@ public class UserDaoJDBCImpl implements UserDao {
                     ")");
         } catch (Exception e) {
             System.out.println(e.getMessage());
-        } finally {
+        } finally {//todo: избавляемся от нагромождений - используем try-with-resources Statement, в качестве ресурса
             if (statement != null) {
                 statement.close();
             }
