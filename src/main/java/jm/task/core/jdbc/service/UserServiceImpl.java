@@ -13,10 +13,12 @@ public class UserServiceImpl implements UserService {
 
     public void createUsersTable() throws SQLException {
         userDaoJDBC.createUsersTable();
+        System.out.println("Таблица создана");
     }
 
     public void dropUsersTable() throws SQLException {
         userDaoJDBC.dropUsersTable();
+        System.out.println("Таблица удалена");
     }
 
     public void saveUser(String name, String lastName, byte age) {
@@ -26,6 +28,7 @@ public class UserServiceImpl implements UserService {
 
     public void removeUserById(long id) {
         userDaoJDBC.removeUserById(id);
+        System.out.println("User с id – " + id + " удален из базы данных");
     }
 
     public List<User> getAllUsers() {
@@ -34,5 +37,6 @@ public class UserServiceImpl implements UserService {
 
     public void cleanUsersTable() {
         userDaoJDBC.cleanUsersTable();
+        System.out.println("Таблица очищена");
     }
 }
