@@ -11,8 +11,11 @@ import java.util.List;
 import static java.sql.DriverManager.getConnection;
 
 public class UserDaoJDBCImpl implements UserDao {
+
     Connection connection;
-    private static final String createUsersQuery = "CREATE TABLE IF NOT EXISTS  USER (" +
+
+    //todo: константы в java обозначаются так (строчные..):
+    private static final String CREATE_USERS_QUERY  = "CREATE TABLE IF NOT EXISTS  USER (" +
             "Id int, Name varchar(256), Lastname varchar(256), Age int" +
             ")";
     private static final String dropUsersQuery = "DROP TABLE IF EXISTS USER";
@@ -23,19 +26,19 @@ public class UserDaoJDBCImpl implements UserDao {
 
 
     public UserDaoJDBCImpl() {
-        Util util = new Util();
-        connection = util.connect();
+//        Util util = new Util();//todo: codeStyle
+        connection = new Util().connect();
     }
 
     public void createUsersTable() {
         try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate(createUsersQuery);
+            statement.executeUpdate(CREATE_USERS_QUERY);
         } catch (Exception e) {
             throw new RuntimeException("...." + e.getMessage());
         }
     }
 
-    public void dropUsersTable() throws SQLException {
+    public void dropUsersTable() throws SQLException {//todo: throws SQLException.. - зачем?
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(dropUsersQuery);
         } catch (Exception e) {
@@ -44,14 +47,14 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        try {
+        try {//todo: try_with_resources - во всех методах
             PreparedStatement sql = connection.prepareStatement(saveUserQuery);
             sql.setString(1, name);
             sql.setString(2, lastName);
             sql.setByte(3, age);
             sql.executeUpdate();
         } catch (Exception e) {
-            throw new RuntimeException("...." + e.getMessage());
+            throw new RuntimeException("...." + e.getMessage());//todo: .."...." - это что? Ронять приложение, только если не выполнится saveUser - я бы не стал. Просто можно ограничиться stackTrace()
         }
     }
 

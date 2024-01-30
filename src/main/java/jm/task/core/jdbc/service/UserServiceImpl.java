@@ -8,7 +8,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
-    UserDao userDaoJDBC = new UserDaoJDBCImpl();
+
+    UserDao userDaoJDBC = new UserDaoJDBCImpl();//todo: инициализация - через constructor
 
     public void createUsersTable() throws SQLException {
         userDaoJDBC.createUsersTable();
