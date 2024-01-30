@@ -11,88 +11,67 @@ import java.util.List;
 import static java.sql.DriverManager.getConnection;
 
 public class UserDaoJDBCImpl implements UserDao {
-//    private static final  = Util.connection();//todo: закомментированного кода не должно быть...
 
-    //todo: создаем переменную Connection connection, инициализируем ее через конструктор
+    Connection connection;
 
-    public UserDaoJDBCImpl() {//todo: пустой зачем?
+    //todo: константы в java обозначаются так (строчные..):
+    private static final String CREATE_USERS_QUERY  = "CREATE TABLE IF NOT EXISTS  USER (" +
+            "Id int, Name varchar(256), Lastname varchar(256), Age int" +
+            ")";
+    private static final String dropUsersQuery = "DROP TABLE IF EXISTS USER";
+    private static final String saveUserQuery = "INSERT INTO USER (name, lastName, age) VALUES (?, ?, ?)";
+    private static final String removeUserQuery = "DELETE FROM USER WHERE id = ?";
+    private static final String getAllUsersQuery = "SELECT * FROM USER";
+    private static final String cleanUsersQuery = "TRUNCATE TABLE USER";
 
+
+    public UserDaoJDBCImpl() {
+//        Util util = new Util();//todo: codeStyle
+        connection = new Util().connect();
     }
 
-    public void createUsersTable() throws SQLException {
-        Connection connection = null;
-        Statement statement = null;
-        try {
-            connection = Util.connect();
-            statement = connection.createStatement();
-            statement.executeUpdate("create table User (" +
-                    "Id int, Name varchar(256), Lastname varchar(256), Age int" +
-                    ")");
+    public void createUsersTable() {
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate(CREATE_USERS_QUERY);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-        } finally {//todo: избавляемся от нагромождений - используем try-with-resources Statement, в качестве ресурса
-            if (statement != null) {
-                statement.close();
-            }
-            if (connection != null) {
-                connection.close();
-            }
+            throw new RuntimeException("...." + e.getMessage());
         }
-
     }
 
-    public void dropUsersTable() throws SQLException {
-        Connection connection = null;
-        Statement statement = null;
-        try {
-            connection = Util.connect();
-            statement = connection.createStatement();
-            statement.executeUpdate("drop table if exists user");
+    public void dropUsersTable() throws SQLException {//todo: throws SQLException.. - зачем?
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate(dropUsersQuery);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-        } finally {
-            if (statement != null) {
-                statement.close();
-            }
-            if (connection != null) {
-                connection.close();
-            }
+            throw new RuntimeException("...." + e.getMessage());
         }
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        Connection connection = null;
-        try {
-            connection = Util.connect();
-            PreparedStatement sql = connection.prepareStatement("INSERT INTO User (name, lastName, age) VALUES (?, ?, ?)");
+        try {//todo: try_with_resources - во всех методах
+            PreparedStatement sql = connection.prepareStatement(saveUserQuery);
             sql.setString(1, name);
             sql.setString(2, lastName);
             sql.setByte(3, age);
             sql.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("...." + e.getMessage());//todo: .."...." - это что? Ронять приложение, только если не выполнится saveUser - я бы не стал. Просто можно ограничиться stackTrace()
         }
     }
 
     public void removeUserById(long id) {
-        Connection connection = null;
         try {
-            connection = Util.connect();
-            PreparedStatement sql = connection.prepareStatement("DELETE FROM user WHERE id = ?");
+            PreparedStatement sql = connection.prepareStatement(removeUserQuery);
             sql.setLong(1, id);
             sql.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("...." + e.getMessage());
         }
     }
 
     public List<User> getAllUsers() {
-        List <User> users = new ArrayList<>();
-        Connection connection = null;
-        try {
-            connection = Util.connect();
-            Statement sql = connection.createStatement();
-            sql.execute("select * from user");
+        List<User> users = new ArrayList<>();
+        try (Statement sql = connection.createStatement()) {
+            sql.execute(getAllUsersQuery);
             ResultSet re = sql.getResultSet();
             while (re.next()) {
                 String name = re.getString("name");
@@ -102,19 +81,16 @@ public class UserDaoJDBCImpl implements UserDao {
                 users.add(user);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("...." + e.getMessage());
         }
         return users;
     }
 
     public void cleanUsersTable() {
-        Connection connection = null;
-        try {
-            connection = Util.connect();
-            Statement statement = connection.createStatement();
-            statement.executeUpdate("TRUNCATE TABLE user");
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate(cleanUsersQuery);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("...." + e.getMessage());
         }
     }
 }

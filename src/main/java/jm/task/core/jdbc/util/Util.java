@@ -6,18 +6,18 @@ import java.sql.SQLException;
 
 public class Util {
 
-    private final String USER_NAME = "root";//todo: - правильное именование констант (которые выносим из тела метода)
-    String password = "my179sql";
-    String connectionURL = "jdbc:mysql://localhost:3306/myschema";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/myschema?useSSL=false";
+    private static final String userName = "root";
+    private static final String password = "root";
 
-    public static Connection connect() throws ClassNotFoundException {//todo: избавляемся от static, так мы ломаем ООП парадигму
-        Class.forName("com.mysql.cj.jdbc.Driver");
+    public static Connection connect() {//todo: избавляемся от static, ..ломаем парадигму ООП
         try {
-            Connection connection = DriverManager.getConnection(connectionURL, userName, password);
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection(DB_URL, userName, password);
             System.out.println("We are connected");
             return connection;
-        } catch (SQLException e) {
-            throw new RuntimeException("........" + e.getMessage());//todo: грамотно - так
+        } catch (Exception e) {
+            throw new RuntimeException("...." + e.getMessage());//todo: обритить внимание - ..дописать "....". Если работа приложения далее не целесообразна - мы его рогяем. Так
         }
     }
 }

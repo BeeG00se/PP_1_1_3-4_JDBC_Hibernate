@@ -9,7 +9,7 @@ import java.util.List;
 
 public class UserServiceImpl implements UserService {
 
-    UserDao userDaoJDBC = new UserDaoJDBCImpl();//todo: инициализируем через конструктор
+    UserDao userDaoJDBC = new UserDaoJDBCImpl();//todo: инициализация - через constructor
 
     public void createUsersTable() throws SQLException {
         userDaoJDBC.createUsersTable();
@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
 
     public void saveUser(String name, String lastName, byte age) {
         userDaoJDBC.saveUser(name, lastName, age);
-        System.out.println("User с именем – " + name + " добавлен в базу данных");//todo: и ток - во всех методах слоя (имитируем log-и)
+        System.out.println("User с именем – " + name + " добавлен в базу данных");
     }
 
     public void removeUserById(long id) {
