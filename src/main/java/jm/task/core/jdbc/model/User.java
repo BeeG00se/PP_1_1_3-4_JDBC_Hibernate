@@ -80,8 +80,13 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, lastName, age);
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = (int) (prime * result + id);
+        result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
+        result = (int) (prime * result + age);
+        return result;
     }
 
-    //todo: забыли переопределить equals/hashCode
 }
